@@ -9,5 +9,5 @@ server.use(express.json());
 server.use(router);
 
 server.listen(4000, () => {
-  console.log("Listening on 4000")
-})
+  console.log("http://localhost:4000")
+});

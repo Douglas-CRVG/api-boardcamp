@@ -1,8 +1,43 @@
 import connection from "../db.js";
 
 async function listGames(req, res) {
+    const query = req.query.name;
+    let result;
     try {
-        res.status(200).send([])
+        if(query){
+            result = await connection.query(`
+            SELECT
+                games.*,
+                categories.name
+                    AS
+                        "categoryName"
+                FROM
+                    games
+                    JOIN
+                        categories
+                        ON
+                            games."categoryId" = categories.id
+                WHERE
+                    LOWER(games.name)
+                LIKE
+                    LOWER($1)
+            `, [`${query}%`]);
+        } else{
+            result = await connection.query(`
+            SELECT
+                games.*,
+                categories.name
+                    AS
+                        "categoryName"
+                FROM
+                    games
+                    JOIN
+                        categories
+                        ON
+                            games."categoryId" = categories.id
+            `);
+        }
+        res.status(200).send(result.rows)
     } catch (err) {
         console.error(err);
         res.sendStatus(500)

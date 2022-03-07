@@ -67,8 +67,29 @@ async function insertCustomer(req, res){
     }
 }
 
+async function updateCustomer(req, res) {
+    const customer = req.body
+    try {
+        await connection.query(`
+        UPDATE customers
+            SET 
+                name = $1,
+                phone = $2,
+                cpf = $3,
+                birthday = $4
+            WHERE
+                id=$5;
+        `,[customer.name, customer.phone, customer.cpf, customer.birthday, req.params.id])
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+}
+
 export {
     listCustomers,
     listCustomer,
-    insertCustomer
+    insertCustomer,
+    updateCustomer
 }

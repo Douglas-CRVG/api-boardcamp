@@ -1,8 +1,7 @@
 import connection from "../db.js";
-import treatCategoryName from "../utils/treatCategoryName.js";
+import treatCategoryName from "../utils/treatString.js";
 
 export default async function existingCategory(req, res, next) {
-    req.body.name = treatCategoryName(req.body.name);
     const result = await connection.query(`
     SELECT
         *

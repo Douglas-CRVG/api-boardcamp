@@ -30,6 +30,26 @@ async function listCustomers(req, res) {
     }
 }
 
+async function listCustomer(req, res) {
+    try {
+        const customerId = await connection.query(`
+        SELECT
+            *
+            FROM
+                customers
+            WHERE
+                id = $1
+        `,[req.params.id]);
+        if(!(customerId.rowCount > 0)){
+            return res.sendStatus(404)
+        }
+        res.status(200).send(customerId.rows[0])
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500)
+    }
+}
+
 async function insertCustomer(req, res){
     const customer = req.body;
     try {
@@ -49,5 +69,6 @@ async function insertCustomer(req, res){
 
 export {
     listCustomers,
+    listCustomer,
     insertCustomer
 }
